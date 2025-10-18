@@ -299,7 +299,8 @@ let thongtin_thanhtoan = function(game_id, dice = false){
 	if (!!last){
 		var getphiennohu = last.phiennohu+1;
 	}
-	    let hutaix = data.hutx;
+	   let hutaix = data?.hutx || 0; // nếu data null thì hutaix = 0
+
 		let TaiXiu_red_tong_tai = 0;
 		let TaiXiu_red_tong_xiu = 0;
 		let TaiXiu_tonguser_tai = 0;
