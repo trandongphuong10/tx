@@ -1,12 +1,8 @@
 module.exports = {
-	'url': 'mongodb://127.0.0.1:27017',
-	'options': {
-		'dbName': 'CLUB3333', // red
-		//'dbName': 'GAME', // red
-		//'dbName': 'admin', // red
-                //'dbName': 'vn11022021', // red
-		'useNewUrlParser': true,
-		'useUnifiedTopology': true,
-		//'autoIndex':       false,
-	},
-};
+  url: 'mongodb+srv://pptx:19042010Pp_@tx.xqbydp9.mongodb.net/?retryWrites=true&w=majority&appName=TX',
+  options: {
+    dbName: 'CLUB3333', // hoặc tên database bạn muốn dùng
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }
+}
