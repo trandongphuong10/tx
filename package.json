@@ -1,12 +1,15 @@
 {
-	"name": "RedVip",
-	"version": "1.17.02",
-	"description": "Server game By MrT98 (Red T)",
-	"main": "server.js",
-	"scripts": {
-		"start": "node server.js",
-		"test": "echo \"Error: no test specified\" && exit 1"
-	},
+  "name": "RedVip",
+  "version": "1.17.02",
+  "engines": {
+    "node": "16.20.0",
+    "npm": "8.x"
+  },
+  "description": "Server game By MrT98 (Red T)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node start_all.js"
+  },
 	"dependencies": {
 		"all": "^0.0.0",
 		"bcrypt": "^5.0.1",
