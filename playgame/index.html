@@ -1,70 +1,102 @@
-// Router HTTP / HTTPS
-let mobile = require('is-mobile');
-let bank   = require('./routes/bank');
-module.exports = function(app, redT) {
-	// Home
-	app.get('/', function(req, res) {
-		if (mobile({ua:req})){
-			return res.redirect('/mobile/');
-		} else {
-			return res.redirect('/playgame/');
-		}
-	});
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GO88 Game</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1, minimum-scale=1,maximum-scale=1"/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 0;
+            margin: 0;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .game-container {
+            background: rgba(45, 45, 45, 0.9);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            max-width: 500px;
+            width: 90%;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        h1 {
+            color: #4CAF50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(76, 175, 80, 0.3);
+        }
+        .subtitle {
+            color: #ccc;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        .status {
+            background: rgba(76, 175, 80, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 1px solid rgba(76, 175, 80, 0.2);
+        }
+        .status p {
+            margin: 8px 0;
+            font-size: 1em;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            margin: 10px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+        .server-info {
+            margin-top: 20px;
+            font-size: 0.8em;
+            color: #888;
+            background: rgba(255,255,255,0.05);
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>🎮 GO88</h1>
+        <div class="subtitle">Cổng Game Giải Trí</div>
+        
+        <div class="status">
+            <p>✅ <strong>Tài Xỉu</strong> - Đang chạy</p>
+            <p>✅ <strong>Bầu Cua</strong> - Đang chạy</p>
+            <p>✅ <strong>Telegram Bot</strong> - Hoạt động</p>
+        </div>
 
-	// Playgame route - FIXED: Remove duplicate
-	app.get('/playgame/', function(req, res) {
-		if (mobile({ua:req})){
-			return res.render('index_mobile');
-		} else {
-			return res.render('index');
-		}
-	});
-
-	// Mobile route - ADDED
-	app.get('/mobile/', function(req, res) {
-		return res.render('index_mobile');
-	});
-
-	// Android
-	app.get('/download/android', function(req, res) {
-		return res.render('download/android');
-	});
-
-	// Admin
-	app.get('/68ClubA/', function(req, res) {
-		return res.render('admin');
-	});
-
-	// Fanpage
-	app.get('/fanpage/', function(req, res) {
-		return require('./routes/fanpage/redirect')(res);
-	});
-
-	// Help IOS
-	app.get('/help/ios/', function(req, res) {
-		return res.render('help/ios');
-	});
-
-	//Telegram
-	app.get('/telegram/', function(req, res) {
-		return require('./routes/telegram/redirect')(res);
-	});
-	
-	app.get('/c40e7445f27f71a00365b36588d60e77', function(req, res) {
-        return require('./app/Controllers/shop/nap_the_callback')(req,res);
-    });
-
-    app.get('/088dcf626ca3f3b95d99751aww259718806', function(req, res) {
-        return require('./app/Controllers/shop/momocallback')(req,res);
-    });
-
-    app.post('/6917cf2fb438e866b63341fbce6ea8c7', function(req, res) {
-        return require('./app/Controllers/shop/bankcallback')(req,res);
-    });
-	app.get('/autochagermmconnect', function(req, res) {
-        return require('./app/Controllers/shop/autocallback')(req,res);
-    });
-
-	// Sign API
-	require('./routes/api')(app, redT);  // load routes API
-};
+        <div>
+            <a href="/" class="btn">🏠 Trang chủ</a>
+            <a href="/health" class="btn">🔍 Trạng thái</a>
+        </div>
+        
+        <div class="server-info">
+            📍 Server: go88-k37y.onrender.com<br>
+            🕒 Hệ thống hoạt động 24/7
+        </div>
+    </div>
+</body>
+</html>

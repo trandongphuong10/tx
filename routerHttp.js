@@ -1,6 +1,8 @@
 // Router HTTP / HTTPS
 let mobile = require('is-mobile');
 let bank   = require('./routes/bank');
+let path = require('path'); // THÊM DÒNG NÀY
+
 module.exports = function(app, redT) {
 	// Home
 	app.get('/', function(req, res) {
@@ -11,12 +13,13 @@ module.exports = function(app, redT) {
 		}
 	});
 
-	// Playgame route - FIXED: Remove duplicate
+	// Playgame route - SỬA: Serve HTML file thay vì render EJS
 	app.get('/playgame/', function(req, res) {
 		if (mobile({ua:req})){
 			return res.render('index_mobile');
 		} else {
-			return res.render('index');
+			// Serve file HTML có sẵn
+			return res.sendFile(path.join(__dirname, '../playgame/index.html'));
 		}
 	});
 

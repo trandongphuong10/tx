@@ -5,7 +5,6 @@
     <title>GO88 Mobile</title>
     <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1, minimum-scale=1,maximum-scale=1"/>
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <style>
         body { 
             font-family: Arial; 
@@ -22,7 +21,10 @@
         .mobile-container {
             padding: 20px;
         }
-        h1 { color: #4CAF50; }
+        h1 { 
+            color: #4CAF50; 
+            font-size: 2em;
+        }
         .btn { 
             display: block; 
             padding: 15px; 
@@ -33,12 +35,21 @@
             margin: 10px 0;
             font-size: 1.1em;
         }
+        .status {
+            background: #2d2d2d;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
     </style>
 </head>
 <body>
     <div class="mobile-container">
         <h1>🎮 GO88 Mobile</h1>
-        <p>Mobile version coming soon...</p>
+        <div class="status">
+            <p>✅ Tài Xỉu - Running</p>
+            <p>✅ Bầu Cua - Running</p>
+        </div>
         <a href="/playgame/" class="btn">Play Desktop Version</a>
         <a href="/" class="btn">Back to Home</a>
     </div>
