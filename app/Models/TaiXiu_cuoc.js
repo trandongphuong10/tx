@@ -3,7 +3,7 @@ let mongoose      = require('mongoose');
 let Schema = new mongoose.Schema({
 	uid:       {type: String,  required: true},              // ID Người cược
 	name:      {type: String,  required: true},              // Name Người cược
-	phien:     {type: Number,  required: true, index: true}, // phiên cược
+	phien:     {type: Number,  required: true, default: 0, index: true}, // phiên cược - THÊM default: 0
 	bet:       {type: Number,  required: true},              // số tiền cược
 	select:    {type: Boolean, required: true},              // bên cược  (Tài = true, Xỉu = false)
 	tralai:    {type: Number,  default: 0},                  // Số tiền trả lại
