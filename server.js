@@ -66,11 +66,14 @@ app.set('view engine', 'ejs');
 app.set('views', './views');
 app.use(express.static('public'));
 
+// 🔥 THÊM STATIC ROUTES
+app.use('/playgame', express.static('playgame'));
+app.use('/assets', express.static('assets'));
+app.use('/src', express.static('src'));
+
 // server socket
 let redT = expressWs.getWss();
 process.redT = redT;
-// 🔥 TẠM THỜI KHÔNG GÁN TelegramBot vào đây - sẽ gán sau khi khởi tạo
-// redT.telegram = TelegramBot; // ĐÃ CHUYỂN LÊN TRÊN
 
 global['redT'] = redT;
 global['userOnline'] = 0;
@@ -97,11 +100,39 @@ try {
     console.log('Error:', error.message);
 }
 
-// 🔥 QUAN TRỌNG: SỬA DÒNG NÀY - Bind to 0.0.0.0 cho Render.com
-const host = process.env.RENDER ? '0.0.0.0' : 'localhost';
-app.listen(port, host, function() {
-    console.log(`✅ Server started on http://${host}:${port}`);
-    console.log(`✅ Render.com compatible: ${process.env.RENDER ? 'YES' : 'NO'}`);
+// 🔥 THÊM TEMPORARY HOME PAGE
+app.get('/', (req, res) => {
+    res.send(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>GO88 Game Server</title>
+            <style>
+                body { font-family: Arial; text-align: center; padding: 50px; background: #f5f5f5; }
+                .container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+                h1 { color: #4CAF50; margin-bottom: 20px; }
+                .status { background: #e8f5e8; padding: 15px; border-radius: 5px; margin: 15px 0; }
+                .btn { display: inline-block; padding: 10px 20px; background: #4CAF50; color: white; text-decoration: none; border-radius: 5px; margin: 5px; }
+                .btn:hover { background: #45a049; }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>🎮 GO88 Game Server</h1>
+                <div class="status">
+                    <p><strong>Status:</strong> 🟢 Online & Running</p>
+                    <p><strong>URL:</strong> https://go88-k37y.onrender.com</p>
+                    <p><strong>Telegram Bot:</strong> ✅ Active</p>
+                </div>
+                <p>
+                    <a href="/playgame/" class="btn">🎮 Play Game</a>
+                    <a href="/health" class="btn">🔍 Health Check</a>
+                </p>
+                <p><small>Server started successfully! Game systems are running.</small></p>
+            </div>
+        </body>
+        </html>
+    `);
 });
 
 // 🔥 THÊM Health check route cho Render.com
@@ -109,6 +140,15 @@ app.get('/health', (req, res) => {
     res.status(200).json({ 
         status: 'OK', 
         timestamp: new Date().toISOString(),
-        service: 'TX Server'
+        service: 'TX Server',
+        games: ['Tài Xỉu', 'Bầu Cua'],
+        telegram_bot: TelegramBot ? 'Active' : 'Disabled'
     });
+});
+
+// 🔥 QUAN TRỌNG: Bind to 0.0.0.0 cho Render.com
+const host = process.env.RENDER ? '0.0.0.0' : 'localhost';
+app.listen(port, host, function() {
+    console.log(`✅ Server started on http://${host}:${port}`);
+    console.log(`✅ Render.com compatible: ${process.env.RENDER ? 'YES' : 'NO'}`);
 });
