@@ -1,7 +1,6 @@
 ﻿require('dotenv').config();
 var cors = require('cors');
 let Telegram      = require('node-telegram-bot-api');
-<<<<<<< HEAD
 let TelegramToken = '8108043503:AAEA3Y-76ULzfJ9HQj4hqhTfh86d9G5BD4c';
 
 // 🔥 SỬA ĐOẠN NÀY - KHÔNG ẢNH HƯỞNG MODEL KHÁC
@@ -26,7 +25,9 @@ function initializeTelegramBot() {
         });
         
         console.log('✅ Telegram Bot started successfully');
-        redT.telegram = TelegramBot;
+        if (redT) {
+            redT.telegram = TelegramBot;
+        }
         
     } catch (error) {
         console.log('⚠️ Telegram Bot disabled due to conflict');
@@ -34,10 +35,6 @@ function initializeTelegramBot() {
     }
 }
 
-=======
-let TelegramToken = '7841015878:AAFvN2EdJsgNr8bu0ujb2M_4I7Q9Q2ygbq4';
-let TelegramBot   = new Telegram(TelegramToken, {polling: true});
->>>>>>> c9316a815d6a98f818c51ca1824879bd79573f4b
 let fs 			  = require('fs');
 let express       = require('express');
 let app           = express();
@@ -100,6 +97,18 @@ try {
     console.log('Error:', error.message);
 }
 
-app.listen(port, function() {
-    console.log("Server listen on port ", port);
+// 🔥 QUAN TRỌNG: SỬA DÒNG NÀY - Bind to 0.0.0.0 cho Render.com
+const host = process.env.RENDER ? '0.0.0.0' : 'localhost';
+app.listen(port, host, function() {
+    console.log(`✅ Server started on http://${host}:${port}`);
+    console.log(`✅ Render.com compatible: ${process.env.RENDER ? 'YES' : 'NO'}`);
+});
+
+// 🔥 THÊM Health check route cho Render.com
+app.get('/health', (req, res) => {
+    res.status(200).json({ 
+        status: 'OK', 
+        timestamp: new Date().toISOString(),
+        service: 'TX Server'
+    });
 });
