@@ -1,17 +1,41 @@
-﻿
-require('dotenv').config();
+﻿require('dotenv').config();
 var cors = require('cors');
 let Telegram      = require('node-telegram-bot-api');
 let TelegramToken = '8108043503:AAEA3Y-76ULzfJ9HQj4hqhTfh86d9G5BD4c';
-let TelegramBot   = new Telegram(TelegramToken, {polling: true});
+
+// 🔥 SỬA ĐOẠN NÀY - KHÔNG ẢNH HƯỞNG MODEL KHÁC
+let TelegramBot = null;
+
+// Khởi tạo bot sau khi server đã chạy ổn định
+setTimeout(() => {
+    initializeTelegramBot();
+}, 20000); // Chờ 20 giây để các model khác load xong
+
+function initializeTelegramBot() {
+    try {
+        TelegramBot = new Telegram(TelegramToken, {
+            polling: true,
+            request: {
+                timeout: 30000,
+                agentOptions: {
+                    keepAlive: true,
+                    family: 4
+                }
+            }
+        });
+        
+        console.log('✅ Telegram Bot started successfully');
+        redT.telegram = TelegramBot;
+        
+    } catch (error) {
+        console.log('⚠️ Telegram Bot disabled due to conflict');
+        console.log('ℹ️ This does not affect other games functionality');
+    }
+}
+
 let fs 			  = require('fs');
-//let https     	  = require('https')
-//let privateKey    = fs.readFileSync('./ssl/b86club.key', 'utf8');
-//let certificate   = fs.readFileSync('./ssl/b86club.pem', 'utf8');
-//let credentials   = {key: privateKey, cert: certificate};
 let express       = require('express');
 let app           = express();
-//let server 	  	  = https.createServer(credentials, app);
 app.use(cors({
     origin: '*',
     optionsSuccessStatus: 200
@@ -20,37 +44,57 @@ let port       = process.env.PORT || 80;
 let expressWs  = require('express-ws')(app);
 let bodyParser = require('body-parser');
 var morgan = require('morgan');
+
 // Setting & Connect to the Database
 let configDB = require('./config/database');
 let mongoose = require('mongoose');
-require('mongoose-long')(mongoose); // INT 64bit
+require('mongoose-long')(mongoose);
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex',   true);
-mongoose.connect(configDB.url, configDB.options); // kết nối tới database
+mongoose.connect(configDB.url, configDB.options);
+
 // cấu hình tài khoản admin mặc định và các dữ liệu mặc định
 require('./config/admin');
+
 // đọc dữ liệu from
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(morgan('combined'));
-app.set('view engine', 'ejs'); // chỉ định view engine là ejs
-app.set('views', './views');   // chỉ định thư mục view
-// Serve static html, js, css, and image files from the 'public' directory
+app.set('view engine', 'ejs');
+app.set('views', './views');
 app.use(express.static('public'));
+
 // server socket
 let redT = expressWs.getWss();
 process.redT = redT;
-redT.telegram = TelegramBot;
+// 🔥 TẠM THỜI KHÔNG GÁN TelegramBot vào đây - sẽ gán sau khi khởi tạo
+// redT.telegram = TelegramBot; // ĐÃ CHUYỂN LÊN TRÊN
+
 global['redT'] = redT;
 global['userOnline'] = 0;
-require('./app/Helpers/socketUser')(redT); // Add function socket
-require('./routerHttp')(app, redT);   // load các routes HTTP
-require('./routerCMS')(app, redT);	//load routes CMS
-require('./routerSocket')(app, redT); // load các routes WebSocket
-require('./app/Cron/taixiu')(redT);   // Chạy game Tài Xỉu
-require('./app/Cron/baucua')(redT);   // Chạy game Bầu Cua
-require('./config/cron')();
-require('./app/Telegram/Telegram')(redT); // Telegram Bot
+
+// 🔥 THÊM TRY-CATCH để bảo vệ các model khác
+try {
+    require('./app/Helpers/socketUser')(redT);
+    require('./routerHttp')(app, redT);
+    require('./routerCMS')(app, redT);
+    require('./routerSocket')(app, redT);
+    require('./app/Cron/taixiu')(redT);
+    require('./app/Cron/baucua')(redT);
+    require('./config/cron')();
+    
+    // Telegram Bot sẽ được require sau nếu cần
+    setTimeout(() => {
+        if (TelegramBot) {
+            require('./app/Telegram/Telegram')(redT);
+        }
+    }, 25000);
+    
+} catch (error) {
+    console.log('⚠️ Some modules failed to load, but server continues...');
+    console.log('Error:', error.message);
+}
+
 app.listen(port, function() {
     console.log("Server listen on port ", port);
 });
