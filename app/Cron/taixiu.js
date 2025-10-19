@@ -309,7 +309,7 @@ let thongtin_thanhtoan = function(game_id, dice = false){
 		let user_select_xiu = 0;
 		let red_player_tai = 0;
 		let red_player_xiu = 0;
-		let getphien = 0;
+		let getphien = 0; // ĐÃ THÊM GIÁ TRỊ MẶC ĐỊNH
 
 		let vipConfig = Helpers.getConfig('topVip');
 
@@ -319,13 +319,19 @@ let thongtin_thanhtoan = function(game_id, dice = false){
 					if (objL.select === true){           // Tổng Red Tài
 						TaiXiu_red_tong_tai += objL.bet;
 						TaiXiu_tonguser_tai += objL.phien;
-						getphien = objL.phien;
+						getphien = objL.phien || 0; // ĐÃ THÊM KIỂM TRA
 					} else if (objL.select === false) {  // Tổng Red Xỉu
 						TaiXiu_red_tong_xiu += objL.bet;
 						TaiXiu_tonguser_xiu += objL.phien;
-						getphien = objL.phien;
+						getphien = objL.phien || 0; // ĐÃ THÊM KIỂM TRA
 					}
 				});
+				
+				// ĐÃ THÊM: KIỂM TRA getphien để tránh chia cho 0
+				if (getphien === 0) {
+					getphien = 1; // giá trị mặc định
+				}
+				
 				let user_select_tai = TaiXiu_tonguser_tai/getphien;
 				let user_dat_tai = user_select_tai%10;
 				let user_select_xiu = TaiXiu_tonguser_xiu/getphien;
@@ -647,7 +653,13 @@ let playGame = function(){
 			thongbao();
 	
 			HU_game.findOne({game:'taixiumd5', type:1}, 'hutx', function(err, datahu){
-				var tienhu = datahu.hutx;
+				// ĐÃ THÊM KIỂM TRA LỖI
+				if (err || !datahu) {
+					console.log('Không tìm thấy dữ liệu HUTX');
+					var tienhu = 0;
+				} else {
+					var tienhu = datahu.hutx || 0;
+				}
 				let home;
 				home = {hutxmain: {monney:tienhu}};
 		Object.values(io.users).forEach(function(users){
@@ -663,7 +675,13 @@ let playGame = function(){
 	
 		}
 		HU_game.findOne({game:'taixiumd5', type:1}, 'hutx', function(err, datahu){
-				var tienhu = datahu ? datahu.hutx : 0;
+				// ĐÃ THÊM KIỂM TRA LỖI
+				if (err || !datahu) {
+					console.log('Không tìm thấy dữ liệu HUTX');
+					var tienhu = 0;
+				} else {
+					var tienhu = datahu.hutx || 0;
+				}
 				let home;
 			home = {taixiu: {hutx:{monney:tienhu}}};
            // home = {hutxmain: {monney:tienhu}};
