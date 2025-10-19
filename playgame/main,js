@@ -1,0 +1,41 @@
+// Temporary main.js to prevent errors
+window.boot = function() {
+    console.log('🎮 Game boot function called');
+    document.getElementById('splash').style.display = 'none';
+    
+    // Create temporary game interface
+    const canvas = document.getElementById('GameCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Set canvas size
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    // Draw temporary game screen
+    ctx.fillStyle = '#2d2d2d';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    ctx.fillStyle = '#4CAF50';
+    ctx.font = '30px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('🎮 GO88 Game Interface', canvas.width/2, canvas.height/2 - 50);
+    
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '18px Arial';
+    ctx.fillText('Game systems are running in background', canvas.width/2, canvas.height/2);
+    ctx.fillText('Tài Xỉu • Bầu Cua • Telegram Bot', canvas.width/2, canvas.height/2 + 40);
+    
+    // Add clickable areas for games
+    ctx.fillStyle = 'rgba(76, 175, 80, 0.3)';
+    ctx.fillRect(canvas.width/2 - 100, canvas.height/2 + 80, 200, 50);
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '16px Arial';
+    ctx.fillText('🎲 Play Tài Xỉu', canvas.width/2, canvas.height/2 + 110);
+};
+
+// Auto boot after load
+setTimeout(() => {
+    if (typeof boot === 'function') {
+        boot();
+    }
+}, 2000);
